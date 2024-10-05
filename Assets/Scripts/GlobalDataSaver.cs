@@ -7,52 +7,52 @@ public class GlobalDataSaver : MonoBehaviour
     int dataScore;
 
     [System.Serializable]
-    class SaveData
+    class ScoreData
     {
-        public string name;
-        public int score;
+        public string dataName = " ";
+        public int dataScore = 0;
     }
 
-    public void SaveScore()
+    public void SaveScoreData()
     {
-        SaveData data = new SaveData();
-        data.name = dataName;
-        data.score = dataScore;
+        ScoreData data = new ScoreData();
+        data.dataName = dataName;
+        data.dataScore = dataScore;
 
         string json = JsonUtility.ToJson(data);
 
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
-    public void LoadScore()
+    public void LoadScoreData()
     {
         string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
         {
+            //File.Delete(path);
             string json = File.ReadAllText(path);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            ScoreData data = JsonUtility.FromJson<ScoreData>(json);
 
-            dataName = data.name;
-            dataScore = data.score;
+            dataName = data.dataName;
+            dataScore = data.dataScore;
         }
     }
 
     public void TrySaveScore(string name, int score)
     {
-        LoadScore();
+        LoadScoreData();
 
         if (score > dataScore)
         {
             dataName = name;
             dataScore = score;
-            SaveScore();
+            SaveScoreData();
         }
     }
 
     public string ShowSavedScore()
     {
-        LoadScore();
-
+        LoadScoreData();
         return "Best Score: " + dataName + " : " + dataScore;
     }
 }
