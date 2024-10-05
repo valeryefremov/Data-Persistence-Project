@@ -12,7 +12,10 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
-    
+
+    public Text SavedScoreText;
+    public GlobalDataSaver globalDataSaver;
+
     private bool m_Started = false;
     private int m_Points;
     
@@ -36,6 +39,8 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        SavedScoreText.text = globalDataSaver.ShowSavedScore();
     }
 
     private void Update()
@@ -59,6 +64,10 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 
@@ -72,5 +81,8 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        globalDataSaver.TrySaveScore(LocalDataSaver.playerName, m_Points);
+        SavedScoreText.text = globalDataSaver.ShowSavedScore();
     }
 }
